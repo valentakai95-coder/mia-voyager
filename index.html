@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mia – AUM-Voyager</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👧</text></svg>" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- Loading Screen -->
+  <div id="loadingScreen" class="loading-screen">
+    <div class="loader-content">
+      <div class="loader-text">Initialisiere Mia...</div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="progress-percent" id="progressPercent">0%</div>
+    </div>
+  </div>
+
+  <!-- Main App -->
+  <div id="app" class="app" style="display: none;">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-left">
+        <h1>👧 Mia – AUM-Voyager</h1>
+        <div class="age-display">
+          <span id="ageDisplay">3 Jahre, 0 Monate</span>
+          <span id="dayCounter" style="color: #6a6a8a; margin-left: 10px;">Tag 1</span>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="emotion-indicator">
+          <div id="emotionColor" class="emotion-color" style="background: #10b981;"></div>
+          <span id="emotionLabel">Sicher</span>
+        </div>
+        <button id="settingsBtn" class="btn-icon">⚙️</button>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+      <!-- Chat Area -->
+      <div class="chat-container">
+        <div id="chatHistory" class="chat-history">
+          <div class="system-message">
+            <strong>System:</strong> Mia ist erwacht. Sprich mit ihr!
+          </div>
+        </div>
+      </div>
+
+      <!-- Input Area -->
+      <div class="input-area">
+        <input
+          id="userInput"
+          type="text"
+          placeholder="Was möchtest du Mia sagen?"
+          class="input-field"
+        />
+        <button id="sendBtn" class="btn-send">Senden</button>
+      </div>
+
+      <!-- Needs Display -->
+      <div class="needs-panel">
+        <h3>Bedürfnisse</h3>
+        <div class="need-item">
+          <label>Hunger</label>
+          <div class="need-bar">
+            <div id="hungerBar" class="need-fill" style="width: 50%; background: #f59e0b;"></div>
+          </div>
+          <span id="hungerValue">50/100</span>
+        </div>
+        <div class="need-item">
+          <label>Energie</label>
+          <div class="need-bar">
+            <div id="energyBar" class="need-fill" style="width: 75%; background: #10b981;"></div>
+          </div>
+          <span id="energyValue">75/100</span>
+        </div>
+        <div class="need-item">
+          <label>Nähe (Papa)</label>
+          <div class="need-bar">
+            <div id="attachmentBar" class="need-fill" style="width: 90%; background: #ec4899;"></div>
+          </div>
+          <span id="attachmentValue">90/100</span>
+        </div>
+        <div class="need-item">
+          <label>Sicherheit</label>
+          <div class="need-bar">
+            <div id="securityBar" class="need-fill" style="width: 85%; background: #06b6d4;"></div>
+          </div>
+          <span id="securityValue">85/100</span>
+        </div>
+        <div class="need-item">
+          <label>Stimulation</label>
+          <div class="need-bar">
+            <div id="stimulationBar" class="need-fill" style="width: 40%; background: #8b5cf6;"></div>
+          </div>
+          <span id="stimulationValue">40/100</span>
+        </div>
+      </div>
+
+      <!-- Memory Panel -->
+      <div class="memory-panel">
+        <h3>Erinnerungen</h3>
+        <div id="memoryList" class="memory-list">
+          <div class="memory-item">
+            <strong>System:</strong> Gedächtnis geladen
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div id="settingsModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Einstellungen</h2>
+        <button id="closeSettingsBtn" class="btn-close">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- API Settings -->
+        <section class="settings-section">
+          <h3>🔑 Mistral API</h3>
+          <div class="form-group">
+            <label for="apiKey">API Key:</label>
+            <input
+              id="apiKey"
+              type="password"
+              placeholder="sk-..."
+              class="input-field"
+            />
+          </div>
+          <div class="form-group">
+            <label for="apiModel">Modell:</label>
+            <select id="apiModel" class="input-field">
+              <option value="mistral-small">mistral-small</option>
+              <option value="mistral-medium" selected>mistral-medium</option>
+              <option value="mistral-large">mistral-large</option>
+            </select>
+          </div>
+          <button id="saveApiBtn" class="btn-primary">API speichern</button>
+        </section>
+
+        <!-- System Prompt Editor -->
+        <section class="settings-section">
+          <h3>💬 System-Prompt</h3>
+          <textarea
+            id="systemPromptEditor"
+            class="textarea-field"
+            rows="15"
+            placeholder="Dein System-Prompt hier..."
+          ></textarea>
+          <button id="savePromptBtn" class="btn-primary">Prompt speichern</button>
+          <button id="resetPromptBtn" class="btn-secondary">Zurücksetzen</button>
+        </section>
+
+        <!-- Time Control -->
+        <section class="settings-section">
+          <h3>⏰ Zeit-Kontrolle</h3>
+          <div class="form-group">
+            <label for="dayInput">Tage vorstellen:</label>
+            <input
+              id="dayInput"
+              type="number"
+              min="1"
+              max="180"
+              value="1"
+              class="input-field"
+            />
+            <button id="advanceTimeBtn" class="btn-primary">Vorstellen</button>
+          </div>
+          <div class="form-group">
+            <label for="currentDay">Aktueller Tag:</label>
+            <input id="currentDay" type="text" disabled class="input-field" />
+          </div>
+        </section>
+
+        <!-- Data Management -->
+        <section class="settings-section">
+          <h3>💾 Daten</h3>
+          <button id="exportDataBtn" class="btn-secondary">Exportieren</button>
+          <button id="importDataBtn" class="btn-secondary">Importieren</button>
+          <button id="resetAllBtn" class="btn-danger">Alles zurücksetzen</button>
+        </section>
+
+        <!-- Memory Debug -->
+        <section class="settings-section">
+          <h3>🧠 Gedächtnis Debug</h3>
+          <div id="memoryDebug" class="debug-panel"></div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/storage.js"></script>
+  <script src="js/state.js"></script>
+  <script src="js/memory.js"></script>
+  <script src="js/llm.js"></script>
+  <script src="js/dialog.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
